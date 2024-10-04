@@ -58,6 +58,7 @@ def time_series_chart(data):
     # Filters data to all ages and races
     data_subset = data[data["age_name"] == "All Ages"]
     data_subset = data_subset[data_subset["race_name"] == "Total"]
+    data_subset = data_subset[data_subset["sex_name"] == "Both"]
 
     return alt.Chart(data).mark_bar().encode(
         x=alt.X('year:T', title='Year'),
@@ -103,7 +104,7 @@ def display_charts(data):
     age_chart_subset = data[data["year"] == str(year_select)]
 
     # Credit to problem set 3 for helping with the following lines
-    race_group_select = st.multiselect("Select Racial Group", options=data['race_name'].unique(), default=data['race_name'].unique())
+    race_group_select = st.multiselect("Select Racial Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
     age_chart_subset = age_chart_subset[age_chart_subset["race_name"].isin(race_group_select)]
 
     # Credit to problem set 3 for helping with the following lines
@@ -112,11 +113,7 @@ def display_charts(data):
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
-    # Credit to problem set 3 for helping with the following lines
-    sex_group_select2 = st.radio("Select Sex Group", options=["Both", "Male", "Female"])
-    time_chart_subset = data[data["sex_name"] == sex_group_select2]
-
-    st.altair_chart(time_series_chart(time_chart_subset), use_container_width=True)
+    st.altair_chart(time_series_chart(data), use_container_width=True)
     
 
 
