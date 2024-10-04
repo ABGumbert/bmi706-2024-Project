@@ -246,7 +246,7 @@ if __name__ == "__main__":
         #print(df.describe())
 
         # Convert 'year' to datetime
-        df['year'] = pd.to_datetime(df['year'], format='%Y')
+        #df['year'] = pd.to_datetime(df['year'], format='%Y')
 
         # Filter data for cirrhosis-related causes
         df_cirrhosis = df[df['cause_name'].str.contains('Cirrhosis', case=False)]
