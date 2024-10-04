@@ -157,7 +157,9 @@ def distribution_boxplot(data):
     # Credit to https://altair-viz.github.io/user_guide/marks/boxplot.html
     # for helping with mark_boxplot
     return alt.Chart(data_subset).mark_boxplot().encode(
-        x = alt.X('val:Q').scale(type="log")
+        # Credit to https://stackoverflow.com/questions/58032074/why-is-altair-returning-an-empty-chart-when-using-log-scale
+        # for help with log scaling
+        x = alt.X('val:Q').scale(type="log", domain=[1E-7, 0.01])
     ).properties(
         width=600,
         height=200,
