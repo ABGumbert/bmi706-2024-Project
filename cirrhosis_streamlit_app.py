@@ -2,15 +2,16 @@ import pandas as pd
 import requests
 from io import StringIO
 import altair as alt
+import streamlit as st
 
 alt.data_transformers.disable_max_rows()
 
-
+@st.cache
 def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
     """Load CSV data from a GitHub repository."""
     try:
         url = f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{branch}/{file_path}"
-        print(f"Attempting to load file from: {url}")
+        #print(f"Attempting to load file from: {url}")
         
         response = requests.get(url)
         response.raise_for_status()
@@ -18,10 +19,10 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
         csv_content = StringIO(response.text)
         df = pd.read_csv(csv_content)
         
-        print(f"Successfully loaded {file_path} from GitHub")
-        print(f"Shape of the dataframe: {df.shape}")
-        print("\nFirst few rows of the dataframe:")
-        print(df.head())
+        #print(f"Successfully loaded {file_path} from GitHub")
+        #print(f"Shape of the dataframe: {df.shape}")
+        #print("\nFirst few rows of the dataframe:")
+        #print(df.head())
         
         return df
     except Exception as e:
@@ -83,15 +84,15 @@ def create_line_chart(data, category):
 
 def display_charts(data):
     """Display all charts based on available data."""
-    print("Displaying charts based on available data...")
+    st.write("Displaying charts based on available data...")
     
-    display(age_group_chart(data))
-    display(time_series_chart(data))
+    st.altair_chart(age_group_chart(data), use_container_width=True)
+    st.altair_chart(time_series_chart(data), use_container_width=True)
     
     age_pivot, sex_pivot, race_pivot = create_pivot_tables(data)
-    display(create_line_chart(age_pivot, 'age_name'))
-    display(create_line_chart(sex_pivot, 'sex_name'))
-    display(create_line_chart(race_pivot, 'race_name'))
+    st.altair_chart(create_line_chart(age_pivot, 'age_name'), use_container_width=True)
+    st.altair_chart(create_line_chart(sex_pivot, 'sex_name'), use_container_width=True)
+    st.altair_chart(create_line_chart(race_pivot, 'race_name'), use_container_width=True)
 
 if __name__ == "__main__":
     repo_owner = "ABGumbert"
@@ -103,14 +104,14 @@ if __name__ == "__main__":
     if df is None:
         print("Data loading failed. Please check the GitHub repository details and file path.")
     else:
-        print("\nColumns in the DataFrame:")
-        print(df.columns.tolist())
+        #print("\nColumns in the DataFrame:")
+        #print(df.columns.tolist())
         
-        print("\nData types of the columns:")
-        print(df.dtypes)
+        #print("\nData types of the columns:")
+        #print(df.dtypes)
         
-        print("\nSummary statistics of numerical columns:")
-        print(df.describe())
+        #print("\nSummary statistics of numerical columns:")
+        #print(df.describe())
 
         # Convert 'year' to datetime
         df['year'] = pd.to_datetime(df['year'], format='%Y')
