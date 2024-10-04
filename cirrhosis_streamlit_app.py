@@ -36,12 +36,8 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
 
 def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
-    year_selection = st.slider("Year", min_value=2000, max_value=2019)
-    subset = data[data['year'] == year_selection]
 
-
-
-    return alt.Chart(subset).mark_line().encode(
+    return alt.Chart(data).mark_line().encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
         y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
@@ -98,7 +94,11 @@ def display_charts(data):
     """Display all charts based on available data."""
     st.write("Displaying charts based on available data...")
     
-    st.altair_chart(age_group_chart(data), use_container_width=True)
+    year_selection = st.slider("Year", min_value=2000, max_value=2019)
+    subset = data[data['year'] == year_selection]
+    st.altair_chart(age_group_chart(subset), use_container_width=True)
+
+    
     st.altair_chart(time_series_chart(data), use_container_width=True)
     
     age_pivot, sex_pivot, race_pivot = create_pivot_tables(data)
