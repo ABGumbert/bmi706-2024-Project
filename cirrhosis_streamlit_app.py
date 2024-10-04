@@ -152,6 +152,8 @@ def distribution_boxplot(data):
     data_subset = data_subset[data_subset["age_name"] != "Age-standardized"]
     data_subset = data_subset[data_subset["age_name"] != "All Ages"]
     data_subset = data_subset[data_subset["sex_name"] != "Both"]
+
+    # 0 values would break the log scaling
     data_subset = data_subset[data_subset["val"] != 0]
 
     # Credit to https://altair-viz.github.io/user_guide/marks/boxplot.html
@@ -171,6 +173,36 @@ def distribution_boxplot(data):
     # for help with setting the color of the plot
     ).configure_mark(
         color='grey'
+    )
+
+def selected_distribution_boxplot(data):
+
+    # Removes total values and non-applicable values from distribution
+    data_subset = data[data["race_name"] != "Total"]
+    data_subset = data_subset[data_subset["age_name"] != "Age-standardized"]
+    data_subset = data_subset[data_subset["age_name"] != "All Ages"]
+    data_subset = data_subset[data_subset["sex_name"] != "Both"]
+
+    # 0 values would break the log scaling
+    data_subset = data_subset[data_subset["val"] != 0]
+
+    # Credit to https://altair-viz.github.io/user_guide/marks/boxplot.html
+    # for helping with mark_boxplot
+    return alt.Chart(data_subset).mark_boxplot().encode(
+        # Credit to https://stackoverflow.com/questions/58032074/why-is-altair-returning-an-empty-chart-when-using-log-scale
+        # and https://stackoverflow.com/questions/62281179/how-to-adjust-scale-ranges-in-altair
+        # for help with log scaling
+        x = alt.X('val:Q').scale(type="log", domain=[1E-7, 0.01])
+        
+    ).properties(
+        width=600,
+        height=200,
+        title='Distribution of Cirrhosis Mortality Data from the Selected Combination of Age Group, Sex, and Race'
+
+    # Credit to https://altair-viz.github.io/user_guide/customization.html
+    # for help with setting the color of the plot
+    ).configure_mark(
+        color='red'
     )
 
 def create_pivot_tables(data):
