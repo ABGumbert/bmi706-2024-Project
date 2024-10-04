@@ -145,6 +145,12 @@ def time_series_chart_race(data):
 
 def create_pivot_tables(data):
     """Create pivot tables for age, sex, and race."""
+
+    # IMPORTANT NOTE: 
+    # this function might not be necessary to combine the data by mean because
+    # the correct average values for a variable are already stored in the dataset.
+    # For example, the 'All Ages' age group, the 'Both' sex group, and the 'Total'
+    # race group already have the average values for their respective data.
     age_pivot = data.pivot_table(values='val', index=['year', 'age_name'], aggfunc='mean').reset_index()
     sex_pivot = data.pivot_table(values='val', index=['year', 'sex_name'], aggfunc='mean').reset_index()
     race_pivot = data.pivot_table(values='val', index=['year', 'race_name'], aggfunc='mean').reset_index()
@@ -185,13 +191,6 @@ def display_charts(data):
     st.altair_chart(time_series_chart_sex(data), use_container_width=True)
     st.altair_chart(time_series_chart_race(data), use_container_width=True)
     
-
-
-
-    age_pivot, sex_pivot, race_pivot = create_pivot_tables(data)
-    st.altair_chart(create_line_chart(age_pivot, 'age_name'), use_container_width=True)
-    st.altair_chart(create_line_chart(sex_pivot, 'sex_name'), use_container_width=True)
-    st.altair_chart(create_line_chart(race_pivot, 'race_name'), use_container_width=True)
 
 if __name__ == "__main__":
     repo_owner = "ABGumbert"
