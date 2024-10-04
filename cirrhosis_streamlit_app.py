@@ -233,14 +233,19 @@ def create_line_chart(data, category):
 
 def display_charts(data):
     """Display all charts based on available data."""
-    st.write("Displaying charts based on available data...")
-    
+
+    # Credit to https://medium.com/@mosqito85/how-to-use-headings-in-streamlit-st-title-st-header-st-subheader-ede54527a67c
+    # for help with formating headers
+    st.header("Section 1: Distribution of Cirrhosis Across the Lifespan")
+    st.write("This section shows the distribution of cirrhosis mortality rates across the lifespan.")
+    st.write("Use the interactive features to display data corresponding to different years, races, and sexes.")
+
     # Credit to problem set 3 for helping with the following lines
     year_select = st.slider("Select Year", min_value=2000, max_value=2019)
     age_chart_subset = data[data["year"] == str(year_select)]
 
     # Credit to problem set 3 for helping with the following lines
-    race_group_select = st.multiselect("Select Racial Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
+    race_group_select = st.multiselect("Select Race Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
     age_chart_subset = age_chart_subset[age_chart_subset["race_name"].isin(race_group_select)]
 
     # Credit to problem set 3 for helping with the following lines
