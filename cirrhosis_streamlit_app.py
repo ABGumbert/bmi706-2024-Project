@@ -136,13 +136,13 @@ def time_series_chart_race(data, selectors):
         color=alt.Color('race_name:N', sort=["Total", "AIAN", "Asian", "Black", "Latino", "White"], title="Racial Group"),
         tooltip=['year', 'race_name', 'val']
     ).add_selection(
+        selectors[0],
+        selectors[1],
         selectors[2]
     ).transform_filter(
+        selectors[0],
+        selectors[1],
         selectors[2]
-    ).add_params(
-        selectors[0]
-    ).add_params(
-        selectors[1]
     ).properties(
         width=600,
         height=500,
