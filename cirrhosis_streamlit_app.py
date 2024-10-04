@@ -45,7 +45,7 @@ def age_group_chart(data):
     return alt.Chart(data_subset).mark_line(point=True).encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
         y=alt.Y('val:Q', title='Mortality Rate'),
-        color=alt.Color('race_name:N', title='Racial Group'),
+        color=alt.Color('race_name:N', sort=["Total", "AIAN", "Asian", "Black", "Latino", "White"], title='Racial Group'),
         tooltip=['age_name', 'race_name', 'val']
     ).properties(
         width=600,
@@ -101,7 +101,7 @@ def time_series_chart_sex(data):
         # Credit to https://vega.github.io/vega/docs/schemes/
         # and https://altair-viz.github.io/user_guide/customization.html
         # for help with color schemes
-        color=alt.Color('sex_name:N', sort=sorted_age_groups, title="Sex Group"),
+        color=alt.Color('sex_name:N', sort=["Both", "Female", "Male"], title="Sex Group"),
         tooltip=['year', 'sex_name', 'val']
     ).add_selection(
         selector
@@ -131,7 +131,7 @@ def time_series_chart_race(data):
         # Credit to https://vega.github.io/vega/docs/schemes/
         # and https://altair-viz.github.io/user_guide/customization.html
         # for help with color schemes
-        color=alt.Color('race_name:N', sort=sorted_age_groups, title="Racial Group"),
+        color=alt.Color('race_name:N', sort=["Total", "AIAN", "Asian", "Black", "Latino", "White"], title="Racial Group"),
         tooltip=['year', 'race_name', 'val']
     ).add_selection(
         selector
