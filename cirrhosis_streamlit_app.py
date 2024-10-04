@@ -238,14 +238,14 @@ def display_charts(data):
     # for help with formating headers
     st.header("Section 1: Distribution of Cirrhosis Across the Lifespan")
     st.write("This section shows the distribution of cirrhosis mortality rates across the lifespan.")
-    st.write("Use the interactive features to display data corresponding to different years, races, and sexes.")
+    st.write("Use the interactive features to display data corresponding to different years, demographics, and sexes.")
 
     # Credit to problem set 3 for helping with the following lines
     year_select = st.slider("Select Year", min_value=2000, max_value=2019)
     age_chart_subset = data[data["year"] == str(year_select)]
 
     # Credit to problem set 3 for helping with the following lines
-    race_group_select = st.multiselect("Select Race Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
+    race_group_select = st.multiselect("Select Demographic Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
     age_chart_subset = age_chart_subset[age_chart_subset["race_name"].isin(race_group_select)]
 
     # Credit to problem set 3 for helping with the following lines
@@ -255,6 +255,10 @@ def display_charts(data):
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
+    st.header("Section 2: Distribution of Cirrhosis Over Time in Different Subpopulations")
+    st.write("This section shows how cirrhosis has impacted different subpopulations over the years.")
+    st.write("For a more detailed view of a specific subpopulation, click on the subpopulation in its legend.")
+
     selector_age = alt.selection_single(fields=['age_name'], bind='legend')
     selector_sex = alt.selection_single(fields=['sex_name'], bind='legend')
     selector_race = alt.selection_single(fields=['race_name'], bind='legend')
@@ -263,9 +267,15 @@ def display_charts(data):
     st.altair_chart(time_series_chart_sex(data, selector_sex), use_container_width=True)
     st.altair_chart(time_series_chart_race(data, selector_race), use_container_width=True)
 
+    st.header("Section 3: Visualizing the Disproportionate Impacts of Cirrhosis")
+    st.write("This section compares the mortality rates of overall cirrhosis to the rates of the selected subpopulations.")
+    st.write("Use the interactive tools to select age, sex, and demographic groups.")
+    st.write("The distribution of rates within the selcted groups will appear in the red boxplot.")
+    st.write("For comparison, the overall distribution of rates will appear in the gray boxplot.")
+
     age_group_multiselect = st.multiselect("Select Specific Age Groups", options=sorted_age_groups, default=sorted_age_groups)
     sex_group_multiselect = st.multiselect("Select Specific Sex Groups", options=["Female", "Male"], default=["Female", "Male"])
-    race_group_multiselect = st.multiselect("Select Specific Race Groups", options=["AIAN", "Asian", "Black", "Latino", "White"], default=["AIAN", "Asian", "Black", "Latino", "White"])
+    race_group_multiselect = st.multiselect("Select Specific Demographic Groups", options=["AIAN", "Asian", "Black", "Latino", "White"], default=["AIAN", "Asian", "Black", "Latino", "White"])
 
     select_dist_subset = data[data["age_name"].isin(age_group_multiselect)]
     select_dist_subset = select_dist_subset[select_dist_subset["sex_name"].isin(sex_group_multiselect)]
