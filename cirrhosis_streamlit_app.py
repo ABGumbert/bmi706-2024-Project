@@ -53,8 +53,8 @@ def age_group_chart(data):
         title='Mortality Rates by Age Group and Demographic'
     ).interactive()
 
-def time_series_chart(data):
-    """Create a line chart of mortality rates over time."""
+def time_series_chart_age(data):
+    """Create a line chart of mortality rates over time grouped by age."""
     selector = alt.selection_single(fields=['age_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
@@ -73,6 +73,66 @@ def time_series_chart(data):
         # for help with color schemes
         color=alt.Color('age_name:N', sort=sorted_age_groups, title="Age Group").scale(scheme="yelloworangered"),
         tooltip=['year', 'age_name', 'val']
+    ).add_selection(
+        selector
+    ).transform_filter(
+        selector
+    ).properties(
+        width=600,
+        height=500,
+        title='Mortality Rates Over Time'
+    ).interactive()
+
+
+def time_series_chart_sex(data):
+    """Create a line chart of mortality rates over time grouped by sex."""
+    selector = alt.selection_single(fields=['sex_name'], bind='legend')
+    
+    # Filters data to appropriate age, race, and sex values
+    data_subset = data[data["age_name"] == "All Ages"]
+    data_subset = data_subset[data_subset["race_name"] == "Total"]
+
+    # Credit to https://altair-viz.github.io/gallery/line_chart_with_points.html
+    # for help with adding points
+    return alt.Chart(data_subset).mark_line(point=True).encode(
+        x=alt.X('year:T', title='Year'),
+        y=alt.Y('val:Q', title='Mortality Rate'),
+
+        # Credit to https://vega.github.io/vega/docs/schemes/
+        # and https://altair-viz.github.io/user_guide/customization.html
+        # for help with color schemes
+        color=alt.Color('sex_name:N', sort=sorted_age_groups, title="Sex Group"),
+        tooltip=['year', 'sex_name', 'val']
+    ).add_selection(
+        selector
+    ).transform_filter(
+        selector
+    ).properties(
+        width=600,
+        height=500,
+        title='Mortality Rates Over Time'
+    ).interactive()
+
+
+def time_series_chart_race(data):
+    """Create a line chart of mortality rates over time grouped by race."""
+    selector = alt.selection_single(fields=['race_name'], bind='legend')
+    
+    # Filters data to appropriate age, race, and sex values
+    data_subset = data[data["age_name"] == "All Ages"]
+    data_subset = data_subset[data_subset["sex_name"] == "Both"]
+
+    # Credit to https://altair-viz.github.io/gallery/line_chart_with_points.html
+    # for help with adding points
+    return alt.Chart(data_subset).mark_line(point=True).encode(
+        x=alt.X('year:T', title='Year'),
+        y=alt.Y('val:Q', title='Mortality Rate'),
+
+        # Credit to https://vega.github.io/vega/docs/schemes/
+        # and https://altair-viz.github.io/user_guide/customization.html
+        # for help with color schemes
+        color=alt.Color('race_name:N', sort=sorted_age_groups, title="Racial Group"),
+        tooltip=['year', 'race_name', 'val']
     ).add_selection(
         selector
     ).transform_filter(
@@ -121,7 +181,9 @@ def display_charts(data):
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
-    st.altair_chart(time_series_chart(data), use_container_width=True)
+    st.altair_chart(time_series_chart_age(data), use_container_width=True)
+    st.altair_chart(time_series_chart_sex(data), use_container_width=True)
+    st.altair_chart(time_series_chart_race(data), use_container_width=True)
     
 
 
