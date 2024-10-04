@@ -36,9 +36,11 @@ def age_group_chart(data):
     return alt.Chart(data).mark_line().encode(
         #x=alt.X('age_name:O', sort='-y', title='Age Group'),
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
-        y=alt.Y('mean(val):Q', title='Mortality Rate'),
+        y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
         tooltip=['age_name', 'race_name', 'val']
+    ).transform_filter(
+        alt.FieldEqualPredicate(field="sex_name", equal="Both")
     ).properties(
         width=600,
         height=400,
