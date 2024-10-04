@@ -55,9 +55,9 @@ def age_group_chart(data):
 
 
 
-def time_series_chart_age(data, selector):
+def time_series_chart_age(data):
     """Create a line chart of mortality rates over time grouped by age."""
-    #selector = alt.selection_single(fields=['age_name'], bind='legend')
+    selector = alt.selection_single(fields=['age_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"].isin(sorted_age_groups)]
@@ -86,9 +86,9 @@ def time_series_chart_age(data, selector):
     )
 
 
-def time_series_chart_sex(data, selector):
+def time_series_chart_sex(data):
     """Create a line chart of mortality rates over time grouped by sex."""
-    #selector = alt.selection_single(fields=['sex_name'], bind='legend')
+    selector = alt.selection_single(fields=['sex_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"] == "All Ages"]
@@ -116,9 +116,9 @@ def time_series_chart_sex(data, selector):
     )
 
 
-def time_series_chart_race(data, selector):
+def time_series_chart_race(data):
     """Create a line chart of mortality rates over time grouped by race."""
-    #selector = alt.selection_single(fields=['race_name'], bind='legend')
+    selector = alt.selection_single(fields=['race_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"] == "All Ages"]
@@ -144,6 +144,8 @@ def time_series_chart_race(data, selector):
         height=500,
         title='Mortality Rates Over Time Categorized by Racial Group'
     )
+
+
 
 def create_pivot_tables(data):
     """Create pivot tables for age, sex, and race."""
@@ -193,13 +195,13 @@ def display_charts(data):
     #selector_race = alt.selection_single(fields=['race_name'], bind='legend')
 
     #selectors = [selector_age, selector_sex, selector_race]
-    selector = alt.selection_single(fields=['age_name', 'sex_name', 'race_name'], bind='legend')
+    #selector = alt.selection_single(fields=['age_name', 'sex_name', 'race_name'], bind='legend')
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
-    st.altair_chart(time_series_chart_age(data, selector), use_container_width=True)
-    st.altair_chart(time_series_chart_sex(data, selector), use_container_width=True)
-    st.altair_chart(time_series_chart_race(data, selector), use_container_width=True)
+    st.altair_chart(time_series_chart_age(data), use_container_width=True)
+    st.altair_chart(time_series_chart_sex(data), use_container_width=True)
+    st.altair_chart(time_series_chart_race(data), use_container_width=True)
     
 
 if __name__ == "__main__":
