@@ -32,8 +32,9 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
 def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
     return alt.Chart(data).mark_line().encode(
-        x=alt.X('age_name:O', sort='-y', title='Age Group'),
-        y=alt.Y('sum(val):Q', title='Mortality Rate'),
+        #x=alt.X('age_name:O', sort='-y', title='Age Group'),
+        x=alt.X('age_name:O', title='Age Group'),
+        y=alt.Y('val:Q', title='Mortality Rate'),
         color='race_name:N',
         tooltip=['age_name', 'race_name', 'val']
     ).properties(
