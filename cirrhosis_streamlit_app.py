@@ -259,7 +259,7 @@ def display_charts(data):
     st.altair_chart(time_series_chart_race(data, selector_race), use_container_width=True)
 
     age_group_multiselect = st.multiselect("Select Specific Age Groups", options=sorted_age_groups, default=sorted_age_groups)
-    sex_group_multiselect = st.multiselect("Select Specific Sex Groups", options=["Female, Male"], default=["Female, Male"])
+    sex_group_multiselect = st.multiselect("Select Specific Sex Groups", options=["Female", "Male"], default=["Female", "Male"])
     race_group_multiselect = st.multiselect("Select Specific Race Groups", options=["AIAN", "Asian", "Black", "Latino", "White"], default=["AIAN", "Asian", "Black", "Latino", "White"])
 
     select_dist_subset = data[data["age_name"].isin(age_group_multiselect)]
