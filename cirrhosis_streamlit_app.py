@@ -63,9 +63,8 @@ def time_series_chart_age_bar(data):
     data_subset = data_subset[data_subset["race_name"] == "Total"]
     data_subset = data_subset[data_subset["sex_name"] == "Both"]
 
-    # Credit to https://altair-viz.github.io/gallery/line_chart_with_points.html
-    # for help with adding points
-    return alt.Chart(data_subset).mark_bar().encode(
+    # Credit to 
+    return alt.Chart(data_subset).mark_rect().encode(
         x=alt.X('year:T', title='Year'),
         y=alt.Y('val:Q', title='Mortality Rate'),
 
@@ -246,7 +245,7 @@ if __name__ == "__main__":
         #print(df.describe())
 
         # Convert 'year' to datetime
-        #df['year'] = pd.to_datetime(df['year'], format='%Y')
+        df['year'] = pd.to_datetime(df['year'], format='%Y')
 
         # Filter data for cirrhosis-related causes
         df_cirrhosis = df[df['cause_name'].str.contains('Cirrhosis', case=False)]
