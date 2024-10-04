@@ -145,7 +145,19 @@ def time_series_chart_race(data):
         title='Mortality Rates Over Time Categorized by Racial Group'
     )
 
+def distribution_boxplot(data):
 
+    # Removes total values and non-applicable values from distribution
+    data_subset = data[data["race_name"] != "Total"]
+    data_subset = data_subset[data_subset["age_name"] != "Age-standardized"]
+    data_subset = data_subset[data_subset["age_name"] != "All Ages"]
+    data_subset = data_subset[data_subset["sex_name"] != "Both"]
+
+    # Credit to https://altair-viz.github.io/user_guide/marks/boxplot.html
+    # for helping with mark_boxplot
+    return alt.Chart(data_subset).mark_boxplot().encode(
+        x = alt.X('val:Q')
+    )
 
 def create_pivot_tables(data):
     """Create pivot tables for age, sex, and race."""
@@ -202,6 +214,8 @@ def display_charts(data):
     st.altair_chart(time_series_chart_age(data), use_container_width=True)
     st.altair_chart(time_series_chart_sex(data), use_container_width=True)
     st.altair_chart(time_series_chart_race(data), use_container_width=True)
+
+    st.altair_chart(distribution_boxplot(data), use_container_width=True)
     
 
 if __name__ == "__main__":
