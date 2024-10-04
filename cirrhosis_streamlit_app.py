@@ -96,9 +96,10 @@ def display_charts(data):
     
     year_selection = st.slider("Year", min_value=2000, max_value=2019)
     subset = data[data['year'] == year_selection]
-    st.altair_chart(age_group_chart(subset), use_container_width=True)
+    subset_age_group_chart = age_group_chart(subset)
+    st.altair_chart(subset_age_group_chart, use_container_width=True)
 
-    
+
     st.altair_chart(time_series_chart(data), use_container_width=True)
     
     age_pivot, sex_pivot, race_pivot = create_pivot_tables(data)
