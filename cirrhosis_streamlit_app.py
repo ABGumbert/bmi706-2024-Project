@@ -33,7 +33,7 @@ def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
     return alt.Chart(data).mark_line().encode(
         x=alt.X('age_name:O', sort='-y', title='Age Group'),
-        y=alt.Y('val:Q', title='Mortality Rate'),
+        y=alt.Y('sum(val):Q', title='Mortality Rate'),
         color='race_name:N',
         tooltip=['age_name', 'race_name', 'val']
     ).properties(
@@ -74,7 +74,7 @@ def create_line_chart(data, category):
     return alt.Chart(data).mark_line().encode(
         x=alt.X('year:T', title='Year'),
         y=alt.Y('val:Q', title='Mortality Rate'),
-        color=f'{category}:N',
+        color='{category}:N',
         tooltip=['year', category, 'val']
     ).properties(
         width=600,
