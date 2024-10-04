@@ -64,7 +64,7 @@ def time_series_chart_age_bar(data):
     data_subset = data_subset[data_subset["sex_name"] == "Both"]
 
     # Credit to 
-    return alt.Chart(data_subset).mark_bar(size=10).encode(
+    return alt.Chart(data_subset).mark_bar(size=25).encode(
         x=alt.X('year:T', title='Year'),
         y=alt.Y('val:Q', title='Mortality Rate'),
 
