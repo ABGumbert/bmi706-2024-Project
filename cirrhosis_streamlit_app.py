@@ -158,12 +158,19 @@ def distribution_boxplot(data):
     # for helping with mark_boxplot
     return alt.Chart(data_subset).mark_boxplot().encode(
         # Credit to https://stackoverflow.com/questions/58032074/why-is-altair-returning-an-empty-chart-when-using-log-scale
+        # and https://stackoverflow.com/questions/62281179/how-to-adjust-scale-ranges-in-altair
         # for help with log scaling
         x = alt.X('val:Q').scale(type="log", domain=[1E-7, 0.01])
+        
     ).properties(
         width=600,
         height=200,
         title='Distribution of Cirrhosis Mortality Data from Each Combination of Age Group, Sex, and Race'
+
+    # Credit to https://altair-viz.github.io/user_guide/customization.html
+    # for help with setting the color of the plot
+    ).configure_mark(
+        color='grey'
     )
 
 def create_pivot_tables(data):
