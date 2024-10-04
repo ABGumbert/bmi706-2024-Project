@@ -258,17 +258,17 @@ def display_charts(data):
     st.altair_chart(time_series_chart_sex(data, selector_sex), use_container_width=True)
     st.altair_chart(time_series_chart_race(data, selector_race), use_container_width=True)
 
-    st.altair_chart(distribution_boxplot(data), use_container_width=True)
-
-    age_group_multiselect = st.multiselect("Select Specific Age Groups", options=data['age_name'].unique(), default=data['age_name'].unique())
-    sex_group_multiselect = st.multiselect("Select Specific Sex Groups", options=data['sex_name'].unique(), default=data['sex_name'].unique())
-    race_group_multiselect = st.multiselect("Select Specific Race Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
+    age_group_multiselect = st.multiselect("Select Specific Age Groups", options=sorted_age_groups, default=sorted_age_groups)
+    sex_group_multiselect = st.multiselect("Select Specific Sex Groups", options=["Female, Male"], default=["Female, Male"])
+    race_group_multiselect = st.multiselect("Select Specific Race Groups", options=["AIAN", "Asian", "Black", "Latino", "White"], default=["AIAN", "Asian", "Black", "Latino", "White"])
 
     select_dist_subset = data[data["age_name"].isin(age_group_multiselect)]
     select_dist_subset = select_dist_subset[select_dist_subset["sex_name"].isin(sex_group_multiselect)]
     select_dist_subset = select_dist_subset[select_dist_subset["race_name"].isin(race_group_multiselect)]
 
     st.altair_chart(selected_distribution_boxplot(select_dist_subset), use_container_width=True)
+
+    st.altair_chart(distribution_boxplot(data), use_container_width=True)
     
 
 if __name__ == "__main__":
