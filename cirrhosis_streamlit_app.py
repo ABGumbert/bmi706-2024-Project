@@ -40,7 +40,7 @@ def age_group_chart(data):
     # Filters data to just ordinal age categories
     data_subset = data[data["age_name"].isin(sorted_age_groups)]
 
-    return alt.Chart(data_subset).mark_line().mark_point().encode(
+    return alt.Chart(data_subset).mark_line().encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
         y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
@@ -60,10 +60,10 @@ def time_series_chart(data):
     data_subset = data_subset[data_subset["race_name"] == "Total"]
     data_subset = data_subset[data_subset["sex_name"] == "Both"]
 
-    return alt.Chart(data).mark_bar().encode(
+    return alt.Chart(data).mark_line().encode(
         x=alt.X('year:T', title='Year'),
         y=alt.Y('val:Q', title='Mortality Rate'),
-        color=alt.Color('age_name:N', sort=sorted_age_groups),
+        color=alt.Color('age_name:N', sort=sorted_age_groups).scale(scheme="lightgreyred"),
         tooltip=['year', 'sex_name', 'age_name', 'val']
     ).add_selection(
         selector
