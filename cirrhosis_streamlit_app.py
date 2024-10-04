@@ -81,7 +81,7 @@ def time_series_chart_age(data):
         width=600,
         height=500,
         title='Mortality Rates Over Time Categorized by Age Group'
-    ).interactive()
+    )
 
 
 def time_series_chart_sex(data):
@@ -111,7 +111,7 @@ def time_series_chart_sex(data):
         width=600,
         height=500,
         title='Mortality Rates Over Time Categorized by Sex Group'
-    ).interactive()
+    )
 
 
 def time_series_chart_race(data):
@@ -141,7 +141,7 @@ def time_series_chart_race(data):
         width=600,
         height=500,
         title='Mortality Rates Over Time Categorized by Racial Group'
-    ).interactive()
+    )
 
 def create_pivot_tables(data):
     """Create pivot tables for age, sex, and race."""
