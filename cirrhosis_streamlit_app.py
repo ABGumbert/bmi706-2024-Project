@@ -152,6 +152,7 @@ def distribution_boxplot(data):
     data_subset = data_subset[data_subset["age_name"] != "Age-standardized"]
     data_subset = data_subset[data_subset["age_name"] != "All Ages"]
     data_subset = data_subset[data_subset["sex_name"] != "Both"]
+    data_subset["val"] = data_subset["val"] + 1E-30
 
     # Credit to https://altair-viz.github.io/user_guide/marks/boxplot.html
     # for helping with mark_boxplot
