@@ -39,9 +39,9 @@ def age_group_chart(data):
     year_selection = st.slider("Year", min_value=2000, max_value=2019)
     subset = data[data['year'] == year_selection]
 
-    
 
-    return alt.Chart(data).mark_line().encode(
+
+    return alt.Chart(subset).mark_line().encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
         y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
