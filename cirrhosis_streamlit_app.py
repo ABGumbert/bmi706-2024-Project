@@ -157,7 +157,7 @@ def distribution_boxplot(data):
     # Credit to https://altair-viz.github.io/user_guide/marks/boxplot.html
     # for helping with mark_boxplot
     return alt.Chart(data_subset).mark_boxplot().encode(
-        x = alt.X('val:Q').scale(type="log", domain=[0, 0.002])
+        x = alt.X('val:Q').scale(type="log")
     ).properties(
         width=600,
         height=200,
