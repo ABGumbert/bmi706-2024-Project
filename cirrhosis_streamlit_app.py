@@ -56,11 +56,10 @@ def time_series_chart(data):
     selector = alt.selection_single(fields=['sex_name', 'age_name'], bind='legend')
     
     # Filters data to all ages and races
-    data_subset = data[data["age_name"] == "All Ages"]
-    data_subset = data_subset[data_subset["race_name"] == "Total"]
+    data_subset = data[data["race_name"] == "Total"]
     data_subset = data_subset[data_subset["sex_name"] == "Both"]
 
-    return alt.Chart(data).mark_line().encode(
+    return alt.Chart(data_subset).mark_line().encode(
         x=alt.X('year:T', title='Year'),
         y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('age_name:N', sort=sorted_age_groups).scale(scheme="lightgreyred"),
@@ -71,7 +70,7 @@ def time_series_chart(data):
         selector
     ).properties(
         width=600,
-        height=400,
+        height=500,
         title='Mortality Rates Over Time'
     ).interactive()
 
