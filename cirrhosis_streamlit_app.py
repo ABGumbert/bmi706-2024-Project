@@ -96,10 +96,16 @@ def display_charts(data):
     """Display all charts based on available data."""
     st.write("Displaying charts based on available data...")
     
-    year_selection = st.slider("Year", min_value=2000, max_value=2019)
-    subset = data[data["year"] == str(year_selection)]
-    age_group_chart_subset = age_group_chart(subset)
-    st.altair_chart(age_group_chart_subset, use_container_width=True)
+    # Credit to problem set 3 for helping with the following two lines
+    year_select = st.slider("Year", min_value=2000, max_value=2019)
+    subset = data[data["year"] == str(year_select)]
+
+    # Credit to problem set 3 for helping with the following two lines
+    race_group_select = st.multiselect("Racial Group", options=data['race_name'].unique())
+    subset = subset[subset["race_name"].isin(race_group_select)]
+
+    #age_group_chart_subset = age_group_chart(subset)
+    st.altair_chart(age_group_chart(subset), use_container_width=True)
 
 
     st.altair_chart(time_series_chart(data), use_container_width=True)
