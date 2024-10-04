@@ -194,9 +194,7 @@ def selected_distribution_boxplot(data, selectors):
         # for help with log scaling
         x = alt.X('val:Q', title="Log-Transformed Mortality Rates With Zero-Values Omitted").scale(type="log", domain=[1E-7, 0.01])
         
-    ).add_params(
-        selectors[0]
-    ).transform_filter(
+    ).add_selection(
         selectors[0]
     ).properties(
         width=600,
