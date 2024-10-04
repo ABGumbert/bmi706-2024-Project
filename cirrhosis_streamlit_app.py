@@ -37,17 +37,13 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
 def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
 
-    year_selection = st.slider("Year", min_value=2000, max_value=2019)
-    #subset = data[data['year'] == year_selection]
-
     return alt.Chart(data).mark_line().encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
         y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
         tooltip=['age_name', 'race_name', 'val']
     ).transform_filter(
-        alt.FieldEqualPredicate(field="sex_name", equal="Both"),
-        alt.FieldEqualPredicate(field="year", equal=year_selection)
+        alt.FieldEqualPredicate(field="sex_name", equal="Both")
     ).properties(
         width=600,
         height=400,
@@ -98,7 +94,12 @@ def display_charts(data):
     """Display all charts based on available data."""
     st.write("Displaying charts based on available data...")
     
-    st.altair_chart(age_group_chart(data), use_container_width=True)
+    year_selection = st.slider("Year", min_value=2000, max_value=2019)
+    subset = data[data['year'] == year_selection]
+    age_group_chart_subset = age_group_chart(subset)
+    st.altair_chart(age_group_chart_subset, use_container_width=True)
+
+
     st.altair_chart(time_series_chart(data), use_container_width=True)
     
     age_pivot, sex_pivot, race_pivot = create_pivot_tables(data)
