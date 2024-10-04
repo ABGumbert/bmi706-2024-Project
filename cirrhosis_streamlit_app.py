@@ -38,7 +38,7 @@ def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
 
     # Filters data to just ordinal age categories
-    data_subset = data_subset[data_subset["age_name"].isin(sorted_age_groups)]
+    data_subset = data[data["age_name"].isin(sorted_age_groups)]
 
     return alt.Chart(data_subset).mark_line().mark_point().encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
