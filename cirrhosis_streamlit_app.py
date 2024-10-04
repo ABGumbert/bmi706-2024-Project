@@ -267,6 +267,7 @@ def display_charts(data):
     st.write("Use the interactive tools to select age, sex, and demographic groups.")
     st.write("The distribution of rates within the selected groups will appear in the red boxplot.")
     st.write("For comparison, the overall distribution of rates will appear in the gray boxplot.")
+    st.write("Each point in the boxplot represents one year's mortality data from a specific combination of age, sex, and race.")
 
     # Creates interactive selections for section 3
 
