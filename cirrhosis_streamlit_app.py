@@ -57,7 +57,7 @@ def age_group_chart(data):
 
 def time_series_chart_age(data, selector):
     """Create a line chart of mortality rates over time grouped by age."""
-    selector = alt.selection_single(fields=['age_name'], bind='legend')
+    #selector = alt.selection_single(fields=['age_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"].isin(sorted_age_groups)]
@@ -88,7 +88,7 @@ def time_series_chart_age(data, selector):
 
 def time_series_chart_sex(data, selector):
     """Create a line chart of mortality rates over time grouped by sex."""
-    selector = alt.selection_single(fields=['sex_name'], bind='legend')
+    #selector = alt.selection_single(fields=['sex_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"] == "All Ages"]
@@ -118,7 +118,7 @@ def time_series_chart_sex(data, selector):
 
 def time_series_chart_race(data, selector):
     """Create a line chart of mortality rates over time grouped by race."""
-    selector = alt.selection_single(fields=['race_name'], bind='legend')
+    #selector = alt.selection_single(fields=['race_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"] == "All Ages"]
