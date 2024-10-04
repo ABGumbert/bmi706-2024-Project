@@ -16,7 +16,6 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
     """Load CSV data from a GitHub repository."""
     try:
         url = f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{branch}/{file_path}"
-        #print(f"Attempting to load file from: {url}")
         
         response = requests.get(url)
         response.raise_for_status()
@@ -24,16 +23,12 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
         csv_content = StringIO(response.text)
         df = pd.read_csv(csv_content)
         
-        #print(f"Successfully loaded {file_path} from GitHub")
-        #print(f"Shape of the dataframe: {df.shape}")
-        #print("\nFirst few rows of the dataframe:")
-        #print(df.head())
-        
         return df
     except Exception as e:
         print(f"An error occurred while loading the file: {str(e)}")
         return None
 
+# Creates the chart for Section 1
 def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
 
@@ -54,7 +49,7 @@ def age_group_chart(data):
     ).interactive()
 
 
-
+# Creates the age-based chart for section 2
 def time_series_chart_age(data, selector):
     """Create a line chart of mortality rates over time grouped by age."""
     #selector = alt.selection_single(fields=['age_name'], bind='legend')
@@ -86,6 +81,7 @@ def time_series_chart_age(data, selector):
     )
 
 
+# Creates the sex-based chart for section 2
 def time_series_chart_sex(data, selector):
     """Create a line chart of mortality rates over time grouped by sex."""
     #selector = alt.selection_single(fields=['sex_name'], bind='legend')
@@ -115,7 +111,7 @@ def time_series_chart_sex(data, selector):
         title='Mortality Rates Over Time Categorized by Sex Group'
     )
 
-
+# Creates the race-based chart for section 2
 def time_series_chart_race(data, selector):
     """Create a line chart of mortality rates over time grouped by race."""
     #selector = alt.selection_single(fields=['race_name'], bind='legend')
@@ -133,7 +129,7 @@ def time_series_chart_race(data, selector):
         # Credit to https://vega.github.io/vega/docs/schemes/
         # and https://altair-viz.github.io/user_guide/customization.html
         # for help with color schemes
-        color=alt.Color('race_name:N', sort=["Total", "AIAN", "Asian", "Black", "Latino", "White"], title="Racial Group"),
+        color=alt.Color('race_name:N', sort=["Total", "AIAN", "Asian", "Black", "Latino", "White"], title="Demographic Group"),
         tooltip=['year', 'race_name', 'val']
     ).add_selection(
         selector
@@ -142,9 +138,10 @@ def time_series_chart_race(data, selector):
     ).properties(
         width=600,
         height=500,
-        title='Mortality Rates Over Time Categorized by Racial Group'
+        title='Mortality Rates Over Time Categorized by Demographic Group'
     )
 
+# Creates the overall distribution chart for section 3
 def distribution_boxplot(data):
 
     # Removes total values and non-applicable values from distribution
@@ -167,7 +164,7 @@ def distribution_boxplot(data):
     ).properties(
         width=600,
         height=200,
-        title='Distribution of Cirrhosis Mortality Data from All Combinations of Age Group, Sex, and Race'
+        title='Distribution of Cirrhosis Mortality Data from All Combinations of Age, Sex, and Demographic Groups'
 
     # Credit to https://altair-viz.github.io/user_guide/customization.html
     # for help with setting the color of the plot
@@ -175,6 +172,9 @@ def distribution_boxplot(data):
         color='grey'
     )
 
+
+
+# Creates the selected distribution chart for section 3
 def selected_distribution_boxplot(data):
 
     # Removes total values and non-applicable values from distribution
@@ -197,7 +197,7 @@ def selected_distribution_boxplot(data):
     ).properties(
         width=600,
         height=200,
-        title='Distribution of Cirrhosis Mortality Data from the Selected Combinations of Age Group, Sex, and Race'
+        title='Distribution of Cirrhosis Mortality Data from the Selected Combinations of Age, Sex, and Demographic Groups'
 
     # Credit to https://altair-viz.github.io/user_guide/customization.html
     # for help with setting the color of the plot
@@ -205,40 +205,22 @@ def selected_distribution_boxplot(data):
         color='red'
     )
 
-def create_pivot_tables(data):
-    """Create pivot tables for age, sex, and race."""
 
-    # NOTE: 
-    # this function might not be necessary to combine the data by mean because
-    # the correct average values for a variable are already stored in the dataset.
-    # For example, the 'All Ages' age group, the 'Both' sex group, and the 'Total'
-    # race group already have the average values for their respective data.
-    age_pivot = data.pivot_table(values='val', index=['year', 'age_name'], aggfunc='mean').reset_index()
-    sex_pivot = data.pivot_table(values='val', index=['year', 'sex_name'], aggfunc='mean').reset_index()
-    race_pivot = data.pivot_table(values='val', index=['year', 'race_name'], aggfunc='mean').reset_index()
-    return age_pivot, sex_pivot, race_pivot
-
-def create_line_chart(data, category):
-    """Create a line chart for a specific category."""
-    return alt.Chart(data).mark_line().encode(
-        x=alt.X('year:T', title='Year'),
-        y=alt.Y('val:Q', title='Mortality Rate'),
-        color=f'{category}:N',
-        tooltip=['year', category, 'val']
-    ).properties(
-        width=600,
-        height=400,
-        title=f'Mortality Rates by {category} (2000-2019)'
-    ).interactive()
-
+# Displays the charts and other components of the Streamlit app
 def display_charts(data):
     """Display all charts based on available data."""
+
+
+    # SECTION 1
 
     # Credit to https://medium.com/@mosqito85/how-to-use-headings-in-streamlit-st-title-st-header-st-subheader-ede54527a67c
     # for help with formating headers
     st.header("Section 1: Distribution of Cirrhosis Across the Lifespan")
     st.write("This section shows the distribution of cirrhosis mortality rates across the lifespan.")
     st.write("Use the interactive features to display data corresponding to different years, demographics, and sexes.")
+
+
+    # Creates interactive widgets for section 1:
 
     # Credit to problem set 3 for helping with the following lines
     year_select = st.slider("Select Year", min_value=2000, max_value=2019)
@@ -252,37 +234,56 @@ def display_charts(data):
     sex_group_select = st.radio("Select Sex Group", options=["Both", "Male", "Female"])
     age_chart_subset = age_chart_subset[age_chart_subset["sex_name"] == sex_group_select]
 
+    # Plots the chart for section 1:
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
+
+
+
+
+    # SECTION 2
 
     st.header("Section 2: Distribution of Cirrhosis Over Time in Different Subpopulations")
     st.write("This section shows how cirrhosis has impacted different subpopulations over the years.")
     st.write("For a more detailed view of a specific subpopulation, click on the subpopulation in its legend.")
 
+
+    # Creates selectors to be used in section 2
     selector_age = alt.selection_single(fields=['age_name'], bind='legend')
     selector_sex = alt.selection_single(fields=['sex_name'], bind='legend')
     selector_race = alt.selection_single(fields=['race_name'], bind='legend')
 
+    # Creates the three charts in section 2
     st.altair_chart(time_series_chart_age(data, selector_age), use_container_width=True)
     st.altair_chart(time_series_chart_sex(data, selector_sex), use_container_width=True)
     st.altair_chart(time_series_chart_race(data, selector_race), use_container_width=True)
 
-    st.header("Section 3: Visualizing the Disproportionate Impacts of Cirrhosis")
-    st.write("This section compares the mortality rates of overall cirrhosis to the rates of the selected subpopulations.")
+
+
+    # SECTION 3
+
+    st.header("Section 3: Visualizing the Disproportionate Impact of Cirrhosis")
+    st.write("This section compares the overall mortality rates of cirrhosis to the rates of the selected subpopulations.")
     st.write("Use the interactive tools to select age, sex, and demographic groups.")
-    st.write("The distribution of rates within the selcted groups will appear in the red boxplot.")
+    st.write("The distribution of rates within the selected groups will appear in the red boxplot.")
     st.write("For comparison, the overall distribution of rates will appear in the gray boxplot.")
+
+    # Creates interactive selections for section 3
 
     age_group_multiselect = st.multiselect("Select Specific Age Groups", options=sorted_age_groups, default=sorted_age_groups)
     sex_group_multiselect = st.multiselect("Select Specific Sex Groups", options=["Female", "Male"], default=["Female", "Male"])
     race_group_multiselect = st.multiselect("Select Specific Demographic Groups", options=["AIAN", "Asian", "Black", "Latino", "White"], default=["AIAN", "Asian", "Black", "Latino", "White"])
 
+    # Subsets the data to what is selected
+
     select_dist_subset = data[data["age_name"].isin(age_group_multiselect)]
     select_dist_subset = select_dist_subset[select_dist_subset["sex_name"].isin(sex_group_multiselect)]
     select_dist_subset = select_dist_subset[select_dist_subset["race_name"].isin(race_group_multiselect)]
 
+    # Creates the boxplot with the selected distribution
     st.altair_chart(selected_distribution_boxplot(select_dist_subset), use_container_width=True)
 
+    # Creates the boxplot of the overall distribution
     st.altair_chart(distribution_boxplot(data), use_container_width=True)
     
 
@@ -296,14 +297,6 @@ if __name__ == "__main__":
     if df is None:
         print("Data loading failed. Please check the GitHub repository details and file path.")
     else:
-        #print("\nColumns in the DataFrame:")
-        #print(df.columns.tolist())
-        
-        #print("\nData types of the columns:")
-        #print(df.dtypes)
-        
-        #print("\nSummary statistics of numerical columns:")
-        #print(df.describe())
 
         # Convert 'year' to datetime
         df['year'] = pd.to_datetime(df['year'], format='%Y')
