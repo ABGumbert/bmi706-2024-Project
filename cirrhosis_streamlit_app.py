@@ -95,7 +95,7 @@ def display_charts(data):
     st.write("Displaying charts based on available data...")
     
     year_selection = st.slider("Year", min_value=2000, max_value=2019)
-    subset = data[data["year"] == year_selection]
+    subset = data[data["year"] == str(year_selection)]
     st.write(len(subset))
     age_group_chart_subset = age_group_chart(subset)
     st.altair_chart(age_group_chart_subset, use_container_width=True)
