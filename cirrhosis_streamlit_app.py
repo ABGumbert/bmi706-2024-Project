@@ -55,9 +55,9 @@ def age_group_chart(data):
 
 
 
-def time_series_chart_age(data):
+def time_series_chart_age(data, selector):
     """Create a line chart of mortality rates over time grouped by age."""
-    selector = alt.selection_single(fields=['age_name'], bind='legend')
+    #selector = alt.selection_single(fields=['age_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"].isin(sorted_age_groups)]
@@ -86,9 +86,9 @@ def time_series_chart_age(data):
     )
 
 
-def time_series_chart_sex(data):
+def time_series_chart_sex(data, selector):
     """Create a line chart of mortality rates over time grouped by sex."""
-    selector = alt.selection_single(fields=['sex_name'], bind='legend')
+    #selector = alt.selection_single(fields=['sex_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"] == "All Ages"]
@@ -116,9 +116,9 @@ def time_series_chart_sex(data):
     )
 
 
-def time_series_chart_race(data):
+def time_series_chart_race(data, selector):
     """Create a line chart of mortality rates over time grouped by race."""
-    selector = alt.selection_single(fields=['race_name'], bind='legend')
+    #selector = alt.selection_single(fields=['race_name'], bind='legend')
     
     # Filters data to appropriate age, race, and sex values
     data_subset = data[data["age_name"] == "All Ages"]
@@ -162,12 +162,12 @@ def distribution_boxplot(data):
         # Credit to https://stackoverflow.com/questions/58032074/why-is-altair-returning-an-empty-chart-when-using-log-scale
         # and https://stackoverflow.com/questions/62281179/how-to-adjust-scale-ranges-in-altair
         # for help with log scaling
-        x = alt.X('val:Q').scale(type="log", domain=[1E-7, 0.01])
+        x = alt.X('val:Q', title="Log-Transformed Mortality Rates With Zero-Values Omitted").scale(type="log", domain=[1E-7, 0.01])
         
     ).properties(
         width=600,
         height=200,
-        title='Distribution of Cirrhosis Mortality Data from Each Combination of Age Group, Sex, and Race'
+        title='Distribution of Cirrhosis Mortality Data from All Combinations of Age Group, Sex, and Race'
 
     # Credit to https://altair-viz.github.io/user_guide/customization.html
     # for help with setting the color of the plot
@@ -175,7 +175,7 @@ def distribution_boxplot(data):
         color='grey'
     )
 
-def selected_distribution_boxplot(data):
+def selected_distribution_boxplot(data, selectors):
 
     # Removes total values and non-applicable values from distribution
     data_subset = data[data["race_name"] != "Total"]
@@ -192,12 +192,14 @@ def selected_distribution_boxplot(data):
         # Credit to https://stackoverflow.com/questions/58032074/why-is-altair-returning-an-empty-chart-when-using-log-scale
         # and https://stackoverflow.com/questions/62281179/how-to-adjust-scale-ranges-in-altair
         # for help with log scaling
-        x = alt.X('val:Q').scale(type="log", domain=[1E-7, 0.01])
+        x = alt.X('val:Q', title="Log-Transformed Mortality Rates With Zero-Values Omitted").scale(type="log", domain=[1E-7, 0.01])
         
+    ).transform_filter(
+        selectors[0]
     ).properties(
         width=600,
         height=200,
-        title='Distribution of Cirrhosis Mortality Data from the Selected Combination of Age Group, Sex, and Race'
+        title='Distribution of Cirrhosis Mortality Data from the Selected Combinations of Age Group, Sex, and Race'
 
     # Credit to https://altair-viz.github.io/user_guide/customization.html
     # for help with setting the color of the plot
@@ -208,7 +210,7 @@ def selected_distribution_boxplot(data):
 def create_pivot_tables(data):
     """Create pivot tables for age, sex, and race."""
 
-    # IMPORTANT NOTE: 
+    # NOTE: 
     # this function might not be necessary to combine the data by mean because
     # the correct average values for a variable are already stored in the dataset.
     # For example, the 'All Ages' age group, the 'Both' sex group, and the 'Total'
@@ -250,12 +252,16 @@ def display_charts(data):
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
-    st.altair_chart(time_series_chart_age(data), use_container_width=True)
-    st.altair_chart(time_series_chart_sex(data), use_container_width=True)
-    st.altair_chart(time_series_chart_race(data), use_container_width=True)
+    selector_age = alt.selection_single(fields=['age_name'], bind='legend')
+    selector_sex = alt.selection_single(fields=['sex_name'], bind='legend')
+    selector_race = alt.selection_single(fields=['race_name'], bind='legend')
+
+    st.altair_chart(time_series_chart_age(data, selector_age), use_container_width=True)
+    st.altair_chart(time_series_chart_sex(data, selector_sex), use_container_width=True)
+    st.altair_chart(time_series_chart_race(data, selector_race), use_container_width=True)
 
     st.altair_chart(distribution_boxplot(data), use_container_width=True)
-    st.altair_chart(selected_distribution_boxplot(data), use_container_width=True)
+    st.altair_chart(selected_distribution_boxplot(data, [selector_age, selector_sex, selector_race]), use_container_width=True)
     
 
 if __name__ == "__main__":
