@@ -71,8 +71,8 @@ def time_series_chart(data):
         # Credit to https://vega.github.io/vega/docs/schemes/
         # and https://altair-viz.github.io/user_guide/customization.html
         # for help with color schemes
-        color=alt.Color('age_name:N', sort=sorted_age_groups).scale(scheme="yelloworangered"),
-        tooltip=['year:N', 'age_name', 'val']
+        color=alt.Color('age_name:N', sort=sorted_age_groups, title="Age Group").scale(scheme="yelloworangered"),
+        tooltip=['year', 'age_name', 'val']
     ).add_selection(
         selector
     ).transform_filter(
