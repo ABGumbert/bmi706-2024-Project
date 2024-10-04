@@ -50,7 +50,7 @@ def age_group_chart(data):
     ).properties(
         width=600,
         height=400,
-        title='Mortality Rates by Age Group and Demographic'
+        title='Mortality Rates by Age Group and Demographic Group'
     ).interactive()
 
 def time_series_chart_age(data):
@@ -64,9 +64,9 @@ def time_series_chart_age(data):
 
     # Credit to https://altair-viz.github.io/gallery/line_chart_with_points.html
     # for help with adding points
-    return alt.Chart(data_subset).mark_line(point=True).encode(
+    return alt.Chart(data_subset).mark_bar(point=True).encode(
         x=alt.X('year:T', title='Year'),
-        y=alt.Y('val:Q', title='Mortality Rate'),
+        y=alt.Y('sum(val):Q', title='Mortality Rate'),
 
         # Credit to https://vega.github.io/vega/docs/schemes/
         # and https://altair-viz.github.io/user_guide/customization.html
