@@ -6,6 +6,8 @@ import streamlit as st
 
 alt.data_transformers.disable_max_rows()
 
+sorted_age_groups = ["<1 year", "1 to 4", "5 to 9", "10 to 14", "15 to 19", "20 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 54", "55 to 59", "60 to 64", "65 to 69", "70 to 74", "75 to 79", "80 to 84", "85 plus"]
+
 @st.cache
 def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
     """Load CSV data from a GitHub repository."""
@@ -33,8 +35,8 @@ def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
     return alt.Chart(data).mark_line().encode(
         #x=alt.X('age_name:O', sort='-y', title='Age Group'),
-        x=alt.X('age_name:O', title='Age Group'),
-        y=alt.Y('val:Q', title='Mortality Rate'),
+        x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
+        y=alt.Y('mean(val):Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
         tooltip=['age_name', 'race_name', 'val']
     ).properties(
