@@ -74,7 +74,7 @@ def time_series_chart_age(data, selectors):
         # and https://altair-viz.github.io/user_guide/customization.html
         # for help with color schemes
         color=alt.Color('age_name:N', sort=sorted_age_groups, title="Age Group").scale(scheme="yelloworangered"),
-        tooltip=['year.Year', 'age_name', 'val']
+        tooltip=['year', 'age_name', 'val']
     ).add_selection(
         selectors[0]
     ).transform_filter(
@@ -104,7 +104,7 @@ def time_series_chart_sex(data, selectors):
         # and https://altair-viz.github.io/user_guide/customization.html
         # for help with color schemes
         color=alt.Color('sex_name:N', sort=["Both", "Female", "Male"], title="Sex Group"),
-        tooltip=['year.Year', 'sex_name', 'val']
+        tooltip=['year', 'sex_name', 'val']
     ).add_selection(
         selectors[1]
     ).transform_filter(
@@ -134,7 +134,7 @@ def time_series_chart_race(data, selectors):
         # and https://altair-viz.github.io/user_guide/customization.html
         # for help with color schemes
         color=alt.Color('race_name:N', sort=["Total", "AIAN", "Asian", "Black", "Latino", "White"], title="Racial Group"),
-        tooltip=['year.Year', 'race_name', 'val']
+        tooltip=['year', 'race_name', 'val']
     ).add_selection(
         selectors[2]
     ).transform_filter(
