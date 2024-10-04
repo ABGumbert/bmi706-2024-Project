@@ -53,16 +53,21 @@ def age_group_chart(data):
 
 def time_series_chart(data):
     """Create a line chart of mortality rates over time."""
-    selector = alt.selection_single(fields=['sex_name', 'age_name'], bind='legend')
+    selector = alt.selection_single(fields=['age_name'], bind='legend')
     
-    # Filters data to all ages and races
-    data_subset = data[data["race_name"] == "Total"]
+    # Filters data to appropriate age, race, and sex values
+    data_subset = data[data["age_name"].isin(sorted_age_groups)]
+    data_subset = data_subset[data_subset["race_name"] == "Total"]
     data_subset = data_subset[data_subset["sex_name"] == "Both"]
 
     return alt.Chart(data_subset).mark_line().encode(
         x=alt.X('year:T', title='Year'),
         y=alt.Y('val:Q', title='Mortality Rate'),
-        color=alt.Color('age_name:N', sort=sorted_age_groups).scale(scheme="lightgreyred"),
+
+        # Credit to https://vega.github.io/vega/docs/schemes/
+        # and https://altair-viz.github.io/user_guide/customization.html
+        # for help with color schemes
+        color=alt.Color('age_name:N', sort=sorted_age_groups).scale(scheme="yelloworangered"),
         tooltip=['year', 'sex_name', 'age_name', 'val']
     ).add_selection(
         selector
