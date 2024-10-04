@@ -37,11 +37,10 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
 def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
 
-    # Filters data to just both sexes and to ordinal age categories
-    data_subset = data[data["sex_name"] == "Both"]
+    # Filters data to just ordinal age categories
     data_subset = data_subset[data_subset["age_name"].isin(sorted_age_groups)]
 
-    return alt.Chart(data_subset).mark_line().encode(
+    return alt.Chart(data_subset).mark_line().mark_point().encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
         y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
@@ -56,11 +55,14 @@ def time_series_chart(data):
     """Create a line chart of mortality rates over time."""
     selector = alt.selection_single(fields=['sex_name', 'age_name'], bind='legend')
     
-    return alt.Chart(data).mark_line().encode(
+    # Filters data to all ages and races
+    data_subset = data[data["age_name"] == "All Ages"]
+    data_subset = data_subset[data_subset["race_name"] == "Total"]
+
+    return alt.Chart(data).mark_bar().encode(
         x=alt.X('year:T', title='Year'),
         y=alt.Y('val:Q', title='Mortality Rate'),
-        color='sex_name:N',
-        strokeDash='age_name:N',
+        color=alt.Color('age_name:N', sort=sorted_age_groups),
         tooltip=['year', 'sex_name', 'age_name', 'val']
     ).add_selection(
         selector
@@ -96,20 +98,29 @@ def display_charts(data):
     """Display all charts based on available data."""
     st.write("Displaying charts based on available data...")
     
-    # Credit to problem set 3 for helping with the following two lines
-    year_select = st.slider("Year", min_value=2000, max_value=2019)
-    subset = data[data["year"] == str(year_select)]
+    # Credit to problem set 3 for helping with the following lines
+    year_select = st.slider("Select Year", min_value=2000, max_value=2019)
+    age_chart_subset = data[data["year"] == str(year_select)]
 
-    # Credit to problem set 3 for helping with the following two lines
-    race_group_select = st.multiselect("Racial Group", options=data['race_name'].unique())
-    subset = subset[subset["race_name"].isin(race_group_select)]
+    # Credit to problem set 3 for helping with the following lines
+    race_group_select = st.multiselect("Select Racial Group", options=data['race_name'].unique(), default=data['race_name'].unique())
+    age_chart_subset = age_chart_subset[age_chart_subset["race_name"].isin(race_group_select)]
 
-    #age_group_chart_subset = age_group_chart(subset)
-    st.altair_chart(age_group_chart(subset), use_container_width=True)
+    # Credit to problem set 3 for helping with the following lines
+    sex_group_select = st.radio("Select Sex Group", options=["Both", "Male", "Female"])
+    age_chart_subset = age_chart_subset[age_chart_subset["sex_name"] == sex_group_select]
 
+    st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
-    st.altair_chart(time_series_chart(data), use_container_width=True)
+    # Credit to problem set 3 for helping with the following lines
+    sex_group_select2 = st.radio("Select Sex Group", options=["Both", "Male", "Female"])
+    time_chart_subset = data[data["sex_name"] == sex_group_select2]
+
+    st.altair_chart(time_series_chart(time_chart_subset), use_container_width=True)
     
+
+
+
     age_pivot, sex_pivot, race_pivot = create_pivot_tables(data)
     st.altair_chart(create_line_chart(age_pivot, 'age_name'), use_container_width=True)
     st.altair_chart(create_line_chart(sex_pivot, 'sex_name'), use_container_width=True)
