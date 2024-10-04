@@ -79,8 +79,6 @@ def time_series_chart_age(data, selector):
         selector
     ).transform_filter(
         selector
-    ).add_params(
-        selector
     ).properties(
         width=600,
         height=500,
@@ -111,8 +109,6 @@ def time_series_chart_sex(data, selector):
         selector
     ).transform_filter(
         selector
-    ).add_params(
-        selector
     ).properties(
         width=600,
         height=500,
@@ -142,8 +138,6 @@ def time_series_chart_race(data, selector):
     ).add_selection(
         selector
     ).transform_filter(
-        selector
-    ).add_params(
         selector
     ).properties(
         width=600,
@@ -181,7 +175,7 @@ def distribution_boxplot(data):
         color='grey'
     )
 
-def selected_distribution_boxplot(data, selectors):
+def selected_distribution_boxplot(data):
 
     # Removes total values and non-applicable values from distribution
     data_subset = data[data["race_name"] != "Total"]
@@ -200,8 +194,6 @@ def selected_distribution_boxplot(data, selectors):
         # for help with log scaling
         x = alt.X('val:Q', title="Log-Transformed Mortality Rates With Zero-Values Omitted").scale(type="log", domain=[1E-7, 0.01])
         
-    ).transform_filter(
-        selectors[0]
     ).properties(
         width=600,
         height=200,
@@ -268,8 +260,15 @@ def display_charts(data):
 
     st.altair_chart(distribution_boxplot(data), use_container_width=True)
 
-    st.write(selector_age)
-    st.altair_chart(selected_distribution_boxplot(data, [selector_age, selector_sex, selector_race]), use_container_width=True)
+    age_group_multiselect = st.multiselect("Select Specific Age Groups", options=data['age_name'].unique(), default=data['age_name'].unique())
+    sex_group_multiselect = st.multiselect("Select Specific Sex Groups", options=data['sex_name'].unique(), default=data['sex_name'].unique())
+    race_group_multiselect = st.multiselect("Select Specific Race Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
+
+    select_dist_subset = data[data["age_name"].isin(age_group_multiselect)]
+    select_dist_subset = select_dist_subset[select_dist_subset["sex_name"].isin(sex_group_multiselect)]
+    select_dist_subset = select_dist_subset[select_dist_subset["race_name"].isin(race_group_multiselect)]
+
+    st.altair_chart(selected_distribution_boxplot(select_dist_subset), use_container_width=True)
     
 
 if __name__ == "__main__":
