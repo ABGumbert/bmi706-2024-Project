@@ -164,7 +164,7 @@ def distribution_boxplot(data):
     ).properties(
         width=600,
         height=200,
-        title='Distribution of Cirrhosis Mortality Data from All Combinations of Age, Sex, and Demographic Groups'
+        title='Distribution of Cirrhosis Mortality Data from All Combinations of Subpopulation Groups'
 
     # Credit to https://altair-viz.github.io/user_guide/customization.html
     # for help with setting the color of the plot
@@ -197,7 +197,7 @@ def selected_distribution_boxplot(data):
     ).properties(
         width=600,
         height=200,
-        title='Distribution of Cirrhosis Mortality Data from the Selected Combinations of Age, Sex, and Demographic Groups'
+        title='Distribution of Cirrhosis Mortality Data from the Selected Combinations of Subpopulation Groups'
 
     # Credit to https://altair-viz.github.io/user_guide/customization.html
     # for help with setting the color of the plot
