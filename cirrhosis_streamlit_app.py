@@ -37,13 +37,15 @@ def load_data_from_github(repo_owner, repo_name, file_path, branch='main'):
 def age_group_chart(data):
     """Create a line chart of mortality rates by age group and demographic."""
 
-    return alt.Chart(data).mark_line().encode(
+    # Filters data to just both sexes and to ordinal age categories
+    data_subset = data[data["sex_name"] == "Both"]
+    data_subset = data_subset[data_subset["age_name"].isin(sorted_age_groups)]
+
+    return alt.Chart(data_subset).mark_line().encode(
         x=alt.X('age_name:O', sort=sorted_age_groups, title='Age Group'),
         y=alt.Y('val:Q', title='Mortality Rate'),
         color=alt.Color('race_name:N', title='Racial Group'),
         tooltip=['age_name', 'race_name', 'val']
-    ).transform_filter(
-        alt.FieldEqualPredicate(field="sex_name", equal="Both")
     ).properties(
         width=600,
         height=400,
@@ -96,7 +98,6 @@ def display_charts(data):
     
     year_selection = st.slider("Year", min_value=2000, max_value=2019)
     subset = data[data["year"] == str(year_selection)]
-    st.write(len(subset))
     age_group_chart_subset = age_group_chart(subset)
     st.altair_chart(age_group_chart_subset, use_container_width=True)
 
