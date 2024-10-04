@@ -157,6 +157,10 @@ def distribution_boxplot(data):
     # for helping with mark_boxplot
     return alt.Chart(data_subset).mark_boxplot().encode(
         x = alt.X('val:Q')
+    ).properties(
+        width=600,
+        height=200,
+        title='Distribution of Cirrhosis Mortality Data from Each Combination of Age Group, Sex, and Race'
     )
 
 def create_pivot_tables(data):
@@ -201,13 +205,6 @@ def display_charts(data):
     sex_group_select = st.radio("Select Sex Group", options=["Both", "Male", "Female"])
     age_chart_subset = age_chart_subset[age_chart_subset["sex_name"] == sex_group_select]
 
-    # Credit to problem set 2 for helping with the following lines
-    #selector_age = alt.selection_single(fields=['age_name'], bind='legend')
-    #selector_sex = alt.selection_single(fields=['sex_name'], bind='legend')
-    #selector_race = alt.selection_single(fields=['race_name'], bind='legend')
-
-    #selectors = [selector_age, selector_sex, selector_race]
-    #selector = alt.selection_single(fields=['age_name', 'sex_name', 'race_name'], bind='legend')
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
