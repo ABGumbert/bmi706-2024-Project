@@ -138,7 +138,7 @@ def time_series_chart_race(data, selectors):
     ).add_selection(
         selectors[2]
     ).transform_filter(
-        selectors[0] & selectors[1] & selectors[2]
+        selectors[2]
     ).properties(
         width=600,
         height=500,
