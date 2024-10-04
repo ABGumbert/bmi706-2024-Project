@@ -55,7 +55,7 @@ def age_group_chart(data):
 
 
 
-def time_series_chart_age(data, selectors):
+def time_series_chart_age(data, selector):
     """Create a line chart of mortality rates over time grouped by age."""
     selector = alt.selection_single(fields=['age_name'], bind='legend')
     
@@ -76,9 +76,9 @@ def time_series_chart_age(data, selectors):
         color=alt.Color('age_name:N', sort=sorted_age_groups, title="Age Group").scale(scheme="yelloworangered"),
         tooltip=['year', 'age_name', 'val']
     ).add_selection(
-        selectors[0]
+        selector
     ).transform_filter(
-        selectors[0]
+        selector
     ).properties(
         width=600,
         height=500,
@@ -86,7 +86,7 @@ def time_series_chart_age(data, selectors):
     )
 
 
-def time_series_chart_sex(data, selectors):
+def time_series_chart_sex(data, selector):
     """Create a line chart of mortality rates over time grouped by sex."""
     selector = alt.selection_single(fields=['sex_name'], bind='legend')
     
@@ -106,9 +106,9 @@ def time_series_chart_sex(data, selectors):
         color=alt.Color('sex_name:N', sort=["Both", "Female", "Male"], title="Sex Group"),
         tooltip=['year', 'sex_name', 'val']
     ).add_selection(
-        selectors[1]
+        selector
     ).transform_filter(
-        selectors[1]
+        selector
     ).properties(
         width=600,
         height=500,
@@ -116,7 +116,7 @@ def time_series_chart_sex(data, selectors):
     )
 
 
-def time_series_chart_race(data, selectors):
+def time_series_chart_race(data, selector):
     """Create a line chart of mortality rates over time grouped by race."""
     selector = alt.selection_single(fields=['race_name'], bind='legend')
     
@@ -136,9 +136,9 @@ def time_series_chart_race(data, selectors):
         color=alt.Color('race_name:N', sort=["Total", "AIAN", "Asian", "Black", "Latino", "White"], title="Racial Group"),
         tooltip=['year', 'race_name', 'val']
     ).add_selection(
-        selectors[2]
+        selector
     ).transform_filter(
-        selectors[2]
+        selector
     ).properties(
         width=600,
         height=500,
@@ -188,18 +188,18 @@ def display_charts(data):
     age_chart_subset = age_chart_subset[age_chart_subset["sex_name"] == sex_group_select]
 
     # Credit to problem set 2 for helping with the following lines
-    selector_age = alt.selection_single(fields=['age_name'], bind='legend')
-    selector_sex = alt.selection_single(fields=['sex_name'], bind='legend')
-    selector_race = alt.selection_single(fields=['race_name'], bind='legend')
+    #selector_age = alt.selection_single(fields=['age_name'], bind='legend')
+    #selector_sex = alt.selection_single(fields=['sex_name'], bind='legend')
+    #selector_race = alt.selection_single(fields=['race_name'], bind='legend')
 
-    selectors = [selector_age, selector_sex, selector_race]
-
+    #selectors = [selector_age, selector_sex, selector_race]
+    selector = alt.selection_single(fields=['age_name', 'sex_name', 'race_name'], bind='legend')
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
 
-    st.altair_chart(time_series_chart_age(data, selectors), use_container_width=True)
-    st.altair_chart(time_series_chart_sex(data, selectors), use_container_width=True)
-    st.altair_chart(time_series_chart_race(data, selectors), use_container_width=True)
+    st.altair_chart(time_series_chart_age(data, selector), use_container_width=True)
+    st.altair_chart(time_series_chart_sex(data, selector), use_container_width=True)
+    st.altair_chart(time_series_chart_race(data, selector), use_container_width=True)
     
 
 if __name__ == "__main__":
