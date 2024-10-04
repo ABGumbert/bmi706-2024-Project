@@ -53,6 +53,38 @@ def age_group_chart(data):
         title='Mortality Rates by Age Group and Demographic Group'
     ).interactive()
 
+
+def time_series_chart_age_bar(data):
+    """Create a line chart of mortality rates over time grouped by age."""
+    selector = alt.selection_single(fields=['age_name'], bind='legend')
+    
+    # Filters data to appropriate age, race, and sex values
+    data_subset = data[data["age_name"].isin(sorted_age_groups)]
+    data_subset = data_subset[data_subset["race_name"] == "Total"]
+    data_subset = data_subset[data_subset["sex_name"] == "Both"]
+
+    # Credit to https://altair-viz.github.io/gallery/line_chart_with_points.html
+    # for help with adding points
+    return alt.Chart(data_subset).mark_bar().encode(
+        x=alt.X('year:T', title='Year'),
+        y=alt.Y('val:Q', title='Mortality Rate'),
+
+        # Credit to https://vega.github.io/vega/docs/schemes/
+        # and https://altair-viz.github.io/user_guide/customization.html
+        # for help with color schemes
+        color=alt.Color('age_name:N', sort=sorted_age_groups, title="Age Group"),
+        tooltip=['year', 'age_name', 'val']
+    ).add_selection(
+        selector
+    ).transform_filter(
+        selector
+    ).properties(
+        width=600,
+        height=500,
+        title='Mortality Rates Over Time Categorized by Age Group'
+    )
+
+
 def time_series_chart_age(data):
     """Create a line chart of mortality rates over time grouped by age."""
     selector = alt.selection_single(fields=['age_name'], bind='legend')
@@ -64,9 +96,9 @@ def time_series_chart_age(data):
 
     # Credit to https://altair-viz.github.io/gallery/line_chart_with_points.html
     # for help with adding points
-    return alt.Chart(data_subset).mark_bar(point=True).encode(
+    return alt.Chart(data_subset).mark_line(point=True).encode(
         x=alt.X('year:T', title='Year'),
-        y=alt.Y('sum(val):Q', title='Mortality Rate'),
+        y=alt.Y('val:Q', title='Mortality Rate'),
 
         # Credit to https://vega.github.io/vega/docs/schemes/
         # and https://altair-viz.github.io/user_guide/customization.html
@@ -186,6 +218,8 @@ def display_charts(data):
     age_chart_subset = age_chart_subset[age_chart_subset["sex_name"] == sex_group_select]
 
     st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
+
+    st.altair_chart(time_series_chart_age_bar(data), use_container_width=True)
 
     st.altair_chart(time_series_chart_age(data), use_container_width=True)
     st.altair_chart(time_series_chart_sex(data), use_container_width=True)
