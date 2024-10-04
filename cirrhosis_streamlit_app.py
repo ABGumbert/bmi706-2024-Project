@@ -261,6 +261,8 @@ def display_charts(data):
     st.altair_chart(time_series_chart_race(data, selector_race), use_container_width=True)
 
     st.altair_chart(distribution_boxplot(data), use_container_width=True)
+
+    print(selector_age)
     st.altair_chart(selected_distribution_boxplot(data, [selector_age, selector_sex, selector_race]), use_container_width=True)
     
 
