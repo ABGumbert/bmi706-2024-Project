@@ -79,6 +79,8 @@ def time_series_chart_age(data, selector):
         selector
     ).transform_filter(
         selector
+    ).add_params(
+        selector
     ).properties(
         width=600,
         height=500,
@@ -109,6 +111,8 @@ def time_series_chart_sex(data, selector):
         selector
     ).transform_filter(
         selector
+    ).add_params(
+        selector
     ).properties(
         width=600,
         height=500,
@@ -138,6 +142,8 @@ def time_series_chart_race(data, selector):
     ).add_selection(
         selector
     ).transform_filter(
+        selector
+    ).add_params(
         selector
     ).properties(
         width=600,
@@ -194,7 +200,7 @@ def selected_distribution_boxplot(data, selectors):
         # for help with log scaling
         x = alt.X('val:Q', title="Log-Transformed Mortality Rates With Zero-Values Omitted").scale(type="log", domain=[1E-7, 0.01])
         
-    ).add_selection(
+    ).transform_filter(
         selectors[0]
     ).properties(
         width=600,
