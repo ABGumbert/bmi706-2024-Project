@@ -4,6 +4,9 @@ from io import StringIO
 import altair as alt
 import streamlit as st
 
+import base64
+import os
+
 alt.data_transformers.disable_max_rows()
 
 # creates custom sorting of age groups
@@ -215,9 +218,6 @@ def display_charts(data):
 
     # Credit to https://medium.com/@mosqito85/how-to-use-headings-in-streamlit-st-title-st-header-st-subheader-ede54527a67c
     # for help with formating headers
-    # header = "Section 1: Distribution of Cirrhosis Across the Lifespan"
-    # s = f"<h2 style='font-family: Georgia, serif; color: #4682B4'>{header}</h2>"
-    # st.markdown(s, unsafe_allow_html=True)
     st.header("Section 1: Distribution of Cirrhosis Across the Lifespan")
     st.write("This section shows the distribution of cirrhosis mortality rates across the lifespan.")
     st.write("Use the interactive features to display data corresponding to different years, demographics, and sexes.")
@@ -289,10 +289,15 @@ def display_charts(data):
 
     # Creates the boxplot of the overall distribution
     st.altair_chart(distribution_boxplot(data), use_container_width=True)
-    
+
+def load_css(file_name):
+    with open(file_name, 'r') as f:
+        style = f'<style>{f.read()}</style>'
+    return style  
 
 if __name__ == "__main__":
-    repo_owner = "ABGumbert"
+    st.markdown(load_css('custom.css'), unsafe_allow_html=True)
+    repo_owner = "HQhanqiZHQ"
     repo_name = "bmi706-2024-Project"
     file_path = "Combined_USA_Data.csv"
 
