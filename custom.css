@@ -42,3 +42,38 @@ h6 {
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* New styles for navigation and menu bar */
+.menu-bar {
+    background-color: #4682B4;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.menu-bar a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.nav-button {
+    margin: 5px;
+    padding: 10px;
+    background-color: #4682B4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+    background-color: #36648B;
+}
+
+/* Smooth transition for charts */
+.stChart {
+    transition: all 0.5s ease;
+}

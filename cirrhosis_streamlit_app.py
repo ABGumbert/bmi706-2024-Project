@@ -212,41 +212,45 @@ def selected_distribution_boxplot(data):
 # Displays the charts and other components of the Streamlit app
 def display_charts(data):
     """Display all charts based on available data."""
-
+    create_navigation_buttons()
+    # Time period filter
+    start_year, end_year = st.slider(
+        "Select Time Period",
+        min_value=data['year'].min().year,
+        max_value=data['year'].max().year,
+        value=(data['year'].min().year, data['year'].max().year)
+    )
+    filtered_data = data[(data['year'].dt.year >= start_year) & (data['year'].dt.year <= end_year)]
 
     # SECTION 1
 
     # Credit to https://medium.com/@mosqito85/how-to-use-headings-in-streamlit-st-title-st-header-st-subheader-ede54527a67c
     # for help with formating headers
-    st.header("Section 1: Distribution of Cirrhosis Across the Lifespan")
+    st.header("Section 1: Distribution of Cirrhosis Across the Lifespan", anchor="section1")
     st.write("This section shows the distribution of cirrhosis mortality rates across the lifespan.")
     st.write("Use the interactive features to display data corresponding to different years, demographics, and sexes.")
-
-
     # Creates interactive widgets for section 1:
-
     # Credit to problem set 3 for helping with the following lines
-    year_select = st.slider("Select Year", min_value=2000, max_value=2019)
-    age_chart_subset = data[data["year"] == str(year_select)]
-
+    year_select = st.slider("Select Year", min_value=start_year, max_value=end_year)
+    age_chart_subset = filtered_data[filtered_data["year"].dt.year == year_select]
     # Credit to problem set 3 for helping with the following lines
-    race_group_select = st.multiselect("Select Demographic Groups", options=data['race_name'].unique(), default=data['race_name'].unique())
+    race_group_select = st.multiselect("Select Demographic Groups", options=filtered_data['race_name'].unique(), default=filtered_data['race_name'].unique())
     age_chart_subset = age_chart_subset[age_chart_subset["race_name"].isin(race_group_select)]
-
-    # Credit to problem set 3 for helping with the following lines
+    # Credit to problem set 3 for helping with the following lines  
     sex_group_select = st.radio("Select Sex Group", options=["Both", "Male", "Female"])
     age_chart_subset = age_chart_subset[age_chart_subset["sex_name"] == sex_group_select]
 
+    chart = age_group_chart(age_chart_subset)
+    chart = chart.properties(width=600, height=400)
     # Plots the chart for section 1:
-
-    st.altair_chart(age_group_chart(age_chart_subset), use_container_width=True)
+    st.altair_chart(chart.interactive(), use_container_width=True)
 
 
 
 
     # SECTION 2
 
-    st.header("Section 2: Distribution of Cirrhosis Over Time in Different Subpopulations")
+    st.header("Section 2: Distribution of Cirrhosis Over Time in Different Subpopulations", anchor="section2")
     st.write("This section shows how cirrhosis has impacted different subpopulations over the years.")
     st.write("For a more detailed view of a specific subpopulation, click on the subpopulation in its legend.")
 
@@ -257,15 +261,15 @@ def display_charts(data):
     selector_race = alt.selection_single(fields=['race_name'], bind='legend')
 
     # Creates the three charts in section 2
-    st.altair_chart(time_series_chart_age(data, selector_age), use_container_width=True)
-    st.altair_chart(time_series_chart_sex(data, selector_sex), use_container_width=True)
-    st.altair_chart(time_series_chart_race(data, selector_race), use_container_width=True)
+    st.altair_chart(time_series_chart_age(filtered_data, selector_age).interactive(), use_container_width=True)
+    st.altair_chart(time_series_chart_sex(filtered_data, selector_sex).interactive(), use_container_width=True)
+    st.altair_chart(time_series_chart_race(filtered_data, selector_race).interactive(), use_container_width=True)
 
 
 
     # SECTION 3
 
-    st.header("Section 3: Visualizing the Disproportionate Impact of Cirrhosis")
+    st.header("Section 3: Visualizing the Disproportionate Impact of Cirrhosis", anchor="section3")
     st.write("This section compares the overall mortality rates of cirrhosis to the rates of the selected subpopulations.")
     st.write("Use the interactive tools to select age, sex, and demographic groups.")
     st.write("The distribution of rates within the selected groups will appear in the red boxplot.")
@@ -280,23 +284,47 @@ def display_charts(data):
 
     # Subsets the data to what is selected
 
-    select_dist_subset = data[data["age_name"].isin(age_group_multiselect)]
+    select_dist_subset = filtered_data[filtered_data["age_name"].isin(age_group_multiselect)]
     select_dist_subset = select_dist_subset[select_dist_subset["sex_name"].isin(sex_group_multiselect)]
     select_dist_subset = select_dist_subset[select_dist_subset["race_name"].isin(race_group_multiselect)]
 
     # Creates the boxplot with the selected distribution
-    st.altair_chart(selected_distribution_boxplot(select_dist_subset), use_container_width=True)
-
+    st.altair_chart(selected_distribution_boxplot(select_dist_subset).interactive(), use_container_width=True)
     # Creates the boxplot of the overall distribution
-    st.altair_chart(distribution_boxplot(data), use_container_width=True)
+    st.altair_chart(distribution_boxplot(filtered_data).interactive(), use_container_width=True)
 
 def load_css(file_name):
     with open(file_name, 'r') as f:
         style = f'<style>{f.read()}</style>'
     return style  
 
+def create_menu_bar():
+    menu_html = """
+    <div class="menu-bar">
+        <a href="#section1">Section 1</a>
+        <a href="#section2">Section 2</a>
+        <a href="#section3">Section 3</a>
+    </div>
+    """
+    st.markdown(menu_html, unsafe_allow_html=True)
+
+def create_navigation_buttons():
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("Go to Section 1", key="nav1"):
+            st.experimental_set_query_params(section="section1")
+    with col2:
+        if st.button("Go to Section 2", key="nav2"):
+            st.experimental_set_query_params(section="section2")
+    with col3:
+        if st.button("Go to Section 3", key="nav3"):
+            st.experimental_set_query_params(section="section3")
+
 if __name__ == "__main__":
+    st.set_page_config(layout="wide")
     st.markdown(load_css('custom.css'), unsafe_allow_html=True)
+    create_menu_bar()
+    st.title("Cirrhosis Mortality Analysis")
     repo_owner = "HQhanqiZHQ"
     repo_name = "bmi706-2024-Project"
     file_path = "Combined_USA_Data.csv"
