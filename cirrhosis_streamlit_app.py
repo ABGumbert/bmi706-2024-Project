@@ -215,7 +215,10 @@ def display_charts(data):
 
     # Credit to https://medium.com/@mosqito85/how-to-use-headings-in-streamlit-st-title-st-header-st-subheader-ede54527a67c
     # for help with formating headers
-    st.header("Section 1: Distribution of Cirrhosis Across the Lifespan")
+    header = "Section 1: Distribution of Cirrhosis Across the Lifespan"
+    s = f"<p style='font-size:20px;'>{header}</p>"
+    st.markdown(s, unsafe_allow_html=True)
+    # st.header("Section 1: Distribution of Cirrhosis Across the Lifespan")
     st.write("This section shows the distribution of cirrhosis mortality rates across the lifespan.")
     st.write("Use the interactive features to display data corresponding to different years, demographics, and sexes.")
 
