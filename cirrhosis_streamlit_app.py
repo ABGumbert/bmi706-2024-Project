@@ -321,7 +321,7 @@ def create_navigation_buttons():
             st.experimental_set_query_params(section="section3")
 
 if __name__ == "__main__":
-    st.set_page_config(layout="wide")
+    # st.set_page_config(layout="wide")
     st.markdown(load_css('custom.css'), unsafe_allow_html=True)
     create_menu_bar()
     st.title("Cirrhosis Mortality Analysis")
