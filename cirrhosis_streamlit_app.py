@@ -212,7 +212,7 @@ def selected_distribution_boxplot(data):
 # Displays the charts and other components of the Streamlit app
 def display_charts(data):
     """Display all charts based on available data."""
-    create_navigation_buttons()
+    # create_navigation_buttons()
     # Time period filter
     start_year, end_year = st.slider(
         "Select Time Period",
