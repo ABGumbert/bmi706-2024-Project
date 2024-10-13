@@ -10,7 +10,7 @@ cirrhosis_streamlit_app.py:
 Connects with Streamlit and runs the Streamlit app of the visualizations.
 
 Combine_USA_Data.py:
-Cleansa and combines the raw data files and creates a new file, Combined_USA_Data.csv,
+Cleans and combines the raw data files and creates a new file, Combined_USA_Data.csv,
 with the filtered and combined data set in a workable format.
 
 Combined_USA_Data.csv:
