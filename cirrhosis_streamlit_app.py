@@ -275,6 +275,7 @@ def display_charts(data):
     st.write("The distribution of rates within the selected groups will appear in the red boxplot.")
     st.write("For comparison, the overall distribution of rates will appear in the gray boxplot.")
     st.write("Each point in the boxplot represents one year's mortality data from a specific age, sex, and race.")
+    st.write("Hover over the boxplots to view descriptive statistics about the distributions.")
 
     # Creates interactive selections for section 3
 
