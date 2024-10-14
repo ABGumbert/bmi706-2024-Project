@@ -21,6 +21,9 @@ task123.html and task123.ipynb:
 Files used for creating and testing initial visualizations before deploying
 the visualizations in cirrhosis_streamlit_app.py.
 
+custom.css:
+helps to add formating, style, and organizational features to our app.
+
 Here is the reference for the source of the data used in this repository:
 
 Institute for Health Metrics and Evaluation (IHME). United States Cirrhosis Mortality by County, Race, and Ethnicity 2000-2019. Seattle, United States of America: Institute for Health Metrics and Evaluation (IHME), 2024.
